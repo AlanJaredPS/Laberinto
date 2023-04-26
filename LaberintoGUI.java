@@ -3,60 +3,90 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package laberinto;
+package laberinto1;
 
 /**
  *
  * @author Jorge
  */
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-public class LaberintoGUI extends JPanel {
-    private Laberinto laberinto;
-
-    public LaberintoGUI(Laberinto laberinto) {
-        this.laberinto = laberinto;
+public class LaberintoGUI {
+    JFrame ventana;
+    JPanel panel;
+    Laberinto lab;
+    
+    public LaberintoGUI(Laberinto lab){
+        this.lab = lab;
+        ventana = new JFrame();
+        panel   = new JPanel();
+        
+        initComponents();
     }
+    
+    private void initComponents(){
+        ventana.setSize(500, 500);
+        ventana.setLocationRelativeTo(null);
+        ventana.setResizable(false);
+        ventana.setTitle("Laberinto");
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        panel.setLayout(null);
+                
+        ventana.getContentPane().add(panel);
+    }
+    
+    public JPanel getPanel(){
+        return panel;
+    }
+    
+    public JFrame getFrame(){
+        return ventana;
+    }
+    
+    public void bye(){
+        JOptionPane.showMessageDialog(null, "Usted ha salido del laberinto");
+    }
+    
+    public void launch(){
+        ventana.setVisible(true); 
+        this.paint(panel.getGraphics());
+        //lab.dibujaPanel(panel.getGraphics());
+    }
+    
+    public void paint(Graphics g){
+        g.drawString("", 0, 0);
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        int anchoCelda = getWidth() / laberinto.getColumnas();
-        int altoCelda = getHeight() / laberinto.getFilas();
-
-        for (int fila = 0; fila < laberinto.getFilas(); fila++) {
-            for (int columna = 0; columna < laberinto.getColumnas(); columna++) {
-                int x = columna * anchoCelda;
-                int y = fila * altoCelda;
-
-                if (laberinto.esObstaculo(fila, columna)) {
-                    g.setColor(Color.BLACK);
-                    g.fillRect(x, y, anchoCelda, altoCelda);
-                } else if (laberinto.esCamino(fila, columna)) {
-                    g.setColor(Color.GREEN);
-                    g.fillRect(x, y, anchoCelda, altoCelda);
-                } else {
-                    g.setColor(Color.WHITE);
-                    g.fillRect(x, y, anchoCelda, altoCelda);
+        
+        for(int ren = 0, y = 0; ren < lab.getLaberinto().length; ren++, y += 46)
+            for(int col = 0, x = 0; col < lab.getLaberinto()[0].length; col++, x += 50){
+                switch(lab.get(ren, col)){
+                    case 3:g.setColor(Color.blue); 
+                            g.fillRect(x+2, y+2, x+48, y+44); break;
+                    case 0: g.setColor(Color.white); 
+                            g.fillRect(x+2, y+2, x+46, y+42); break;
+                    case 1: g.setColor(Color.black); 
+                            g.fillRect(x+2, y+2, x+48, y+44); break;
+                    case 2: g.setColor(Color.red);   
+                            g.fillRect(x+2, y+2, x+48, y+44); break;
                 }
-            }
-        }
+                
+            } 
+        for(int col = 500/10; col < 500; col+=50)    
+            g.drawLine(col, 0, col, 500);
+        for(int ren = 46; ren < 500; ren+=46)        
+            g.drawLine(0, ren, 500, ren);
+        
     }
-
-    public static void main(String[] args) {
-        Laberinto laberinto = new Laberinto(10, 10);
-        // Agregar obstáculos al laberinto aquí
-
-        LaberintoGUI gui = new LaberintoGUI(laberinto);
-
-        JFrame frame = new JFrame("Laberinto");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(gui);
-        frame.setSize(400, 400);
-        frame.setVisible(true);
-
-        // Resolver el laberinto aquí
+    
+    public void pintarPorPixel(Graphics g){
+        g.drawString("", 0, 0);
+        
+        g.fillRect(10, 10, 12, 12);
     }
+    
 }
